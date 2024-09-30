@@ -1,0 +1,9 @@
+version: "3"
+services:
+  discord-bot:
+    build: .
+    container_name: my-discord-bot
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+    env_file:
+      - .env
