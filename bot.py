@@ -32,12 +32,18 @@ async def play_next_in_queue(ctx):
     if queues[ctx.guild.id]:
         next_url = queues[ctx.guild.id].pop(0)
         voice_client = ctx.voice_client
-        await play_youtube_audio(voice_client, next_url)
+        success = await play_youtube_audio(voice_client, next_url)
 
-        # After playing, check if there are more items in the queue
-        await voice_client.disconnect()
-        if queues[ctx.guild.id]:  # If there are more songs in the queue
-            await play_next_in_queue(ctx)  # Play the next song
+        # Check if there are more items in the queue
+        if queues[
+            ctx.guild.id
+        ]:  # If there are more songs in the queue, play the next song
+            await play_next_in_queue(ctx)
+        else:
+            await ctx.send("Queue is empty, disconnecting...")
+            await voice_client.disconnect()
+    else:
+        await ctx.send("Queue is empty.")
 
 
 @bot.command(name="play", help="Plays audio from a YouTube video in a voice channel.")
@@ -97,7 +103,8 @@ async def skip(ctx):
         if queues[ctx.guild.id]:
             await play_next_in_queue(ctx)
         else:
-            await ctx.send("No more songs in the queue.")
+            await ctx.send("No more songs in the queue, disconnecting...")
+            await ctx.voice_client.disconnect()
     else:
         await ctx.send("No audio is currently playing.")
 
