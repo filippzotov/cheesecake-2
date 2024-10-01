@@ -8,6 +8,7 @@ async def play_youtube_audio(voice_client: discord.VoiceClient, url: str):
         "format": "bestaudio/best",
         "noplaylist": True,
         "quiet": True,  # Reduce output
+        "useragent": "default",  # Use default user agent to avoid video availability issues
     }
 
     try:
